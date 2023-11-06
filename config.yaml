@@ -1,0 +1,53 @@
+---
+
+-  hosts: all
+   become: true
+   pre_tasks:
+
+   - name: Install Updates and Update Cache for Ubuntu
+     apt:
+       upgrade: dist
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+
+   - name: Install Updates and Update Cache for CentOS
+     yum:
+       update_only: yes
+       update_cache: yes
+     when: ansible_distribution == "CentOS"
+
+-  hosts: Ubuntu_Server
+   become: true
+   roles:
+     - Ubuntu_LampStack
+     - Ubuntu_ElasticStack
+     - Ubuntu_Nagios
+
+-  hosts: CentOS_Server
+   become: true
+   roles:
+     - CentOS_LampStack
+     - Centos_ElasticStack
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

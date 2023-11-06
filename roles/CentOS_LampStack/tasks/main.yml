@@ -1,0 +1,17 @@
+
+   - name: Install LampStack in CentOS
+     apt:
+       name:
+         - httpd
+         - php
+         - mariadb-server
+       state: latest
+
+   - name: Enable and Start LampStack in CentOS
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: true
+     loop:
+       - httpd
+       - mariadb

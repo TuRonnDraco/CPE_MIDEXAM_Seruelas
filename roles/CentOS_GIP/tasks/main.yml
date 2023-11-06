@@ -1,0 +1,172 @@
+
+   - name: Adding the Grafana Repository
+     yum_repository:
+       name: grafana
+       description: grafana-yum-repo
+       baseurl: https://packages.grafana.com/oss/rpm
+       gpgcheck: true
+       gpgkey: https://packages.grafana.com/gpg.key
+       state: present
+
+   - name: Adding the InfluxDB Repository
+     yum_repository:
+       name: influxdb
+       description: influxdb-yum-repo
+       baseurl: https://repos.influxdata.com/rhel/7/x86_64/stable/
+       gpgcheck: true
+       gpgkey: https://repos.influxdata.com/influxdb.key
+       state: present
+
+   - name: Creation of Prometheus download directory in CentOS
+     file:
+       path: ~/prometheus
+       mode: 0777
+       state: directory
+
+   - name: Creation of Prometheus Library Directories in CentOS
+     file:
+       path:
+         - /etc/prometheus
+         - /var/lib/prometheus
+       mode: 0777
+       state: directory
+
+   - name: Extraction of Files of Prometheus in CentOS
+     unarchive:
+       src: https://github.com/prometheus/prometheus/releases/download/v2.8.1/prometheus-2.8.1.linux-amd64.tar.gz
+       dest: ~/prometheus
+       remote_src: yes
+       mode: 0777
+       owner: root
+       group: root
+
+   - name: Copying Files from Prometheus Directory to others in CentOS
+     shell: |
+       cd ~/prometheus/prometheus*
+       cp -r prometheus /usr/local/bin/
+       cp -r promtool /usr/local/bin/
+       cp -r consoles /etc/prometheus
+       cp -r console_libraries /etc/prometheus
+
+   - name: Copy Configuration of Prometheus to etc/prometheus/ in CentOS
+     copy:
+       src: prometheus.yml
+       dest: /etc/prometheus
+       mode: 7777
+       owner: root
+       group: root
+
+   - name: Copy Configuration of Prometheus Service to /etc/systemd/system/ in CentOS
+     copy:
+       src: prometheus.service
+       dest: /etc/systemd/system
+       mode: 7777
+       owner: root
+
+   - name: Reload systemd service in CentOS
+     shell: |
+       systemctl daemon-reload
+
+   - name: Reloading Packages via Update (CentOS)
+     yum:
+       update_only: yes
+       update_cache: yes
+
+   - name: Enable HTTPD for Prometheus
+     service:
+       name: httpd
+       state: restarted
+       enabled: true
+
+   - name: Installation of Grafana and InfluxDB
+     yum:
+       name:
+         - grafana
+         - influxdb
+       state: present
+
+   - name: Enabling of TCP Ports for InfluxDB and Prometheus
+     shell: |
+       firewall-cmd --zone=public --add-port=9090/tcp --permanent
+       firewall-cmd --add-port=8086/tcp --permanent
+
+   - name: Reload Firewalld Service in CentOS
+     service:
+       name: firewalld
+       state: restarted
+       enabled: true
+
+   - name: Start and Enable the GIP services (CentOS)
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: true
+     loop:
+       - grafana-server
+       - influxdb
+       - prometheus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

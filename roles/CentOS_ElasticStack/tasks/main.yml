@@ -1,0 +1,41 @@
+
+   - name: Install Prerequisites
+     yum:
+       name:
+         - java-1.8.0-openjdk
+         - epel-release
+         - curl
+       state: present
+
+   - name: Adding Elastic Stack Repository Key
+     rpm_key:
+       key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+   - name: Adding the YUM Repository of Elastic Stack
+     yum_repository:
+       name: Elastic-Stack
+       description: Elastic-Stack-Yum-Repo
+       baseurl: https://artifacts.elastic.co/packages/7.x/yum
+       gpgcheck: true
+       gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+       state: present
+
+   - name: Reloading Packages via Update
+     yum:
+       update_only: yes
+       update_cache: yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+
+   - name: Install LampStack in Ubuntu
+     apt:
+       name:
+         - apache2
+         - libapache2-mod-php
+         - mariadb-server
+       state: latest
+
+   - name: Enable and Start LampStack in Ubuntu
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: true
+     loop:
+       - apache2
+       - mariadb

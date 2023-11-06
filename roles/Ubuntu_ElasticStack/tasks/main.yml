@@ -1,0 +1,117 @@
+
+   - name: Install Prerequisites
+     apt:
+       name:
+         - openjdk-11-jdk
+         - openjdk-8-jre
+         - apt-transport-https
+         - software-properties-common
+         - curl
+       state: present
+
+   - name: Adding Elastic Stack Repository Key
+     apt_key:
+       url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+   - name: Adding the APT Repository of Elastic Stack
+     apt_repository:
+       repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+       state: present
+
+   - name: Reloading Packages via Update
+     apt:
+       upgrade: dist
+       update_cache: yes
+
+   - name: Install ElasticStack in Ubuntu
+     apt:
+       name:
+         - elasticsearch
+         - kibana
+         - logstash
+
+   - name: Enable and Start ElasticStack in Ubuntu
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: true
+     loop:
+       - elasticsearch
+       - kibana
+       - logstash
+
+   - name: Install ElasticStack in CentOS
+     yum:
+       name:
+         - elasticsearch
+         - kibana
+         - logstash
+
+   - name: Enable and Start ElasticStack in CentOS
+     systemd:
+       name: "{{ item }}"
+       state: restarted
+       enabled: true
+     loop:
+       - elasticsearch
+       - kibana
+       - logstash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
